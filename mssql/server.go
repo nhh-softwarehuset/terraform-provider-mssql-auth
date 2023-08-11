@@ -19,6 +19,7 @@ func getServerSchema(prefix string) map[string]*schema.Schema {
 	var LoginMethods = []string{
 		prefix + "login",
 		prefix + "azure_login",
+		prefix + "access_token",
 		prefix + "azuread_default_chain_auth",
 		prefix + "azuread_managed_identity_auth",
 	}
@@ -80,6 +81,21 @@ func getServerSchema(prefix string) map[string]*schema.Schema {
 						Required:    true,
 						Sensitive:   true,
 						DefaultFunc: schema.EnvDefaultFunc("MSSQL_CLIENT_SECRET", nil),
+					},
+				},
+			},
+		},
+		"access_token": {
+			Type:         schema.TypeList,
+			MaxItems:     1,
+			Optional:     true,
+			ExactlyOneOf: LoginMethods,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"access_token": {
+						Type:        schema.TypeString,
+						Required:    true,
+						DefaultFunc: schema.EnvDefaultFunc("MSSQL_ACCESS_TOKEN", nil),
 					},
 				},
 			},
